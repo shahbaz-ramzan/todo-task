@@ -1,84 +1,76 @@
-import React, { useState } from 'react';
-
+import React, { useState } from "react";
+import "./style.css";
 
 function Form() {
-  const [inputValues, setInputValues] = useState({ name: '',status:"" });
-  const [employe, setEmploye] = useState([]);
-  const [id,setId]=useState(0)
+  const [inputValues, setInputValues] = useState({ name: "", status: false });
+  const [todo, setTodo] = useState([]);
+  const [id, setId] = useState(0);
 
   const handleChange = (event) => {
     setInputValues({ ...inputValues, [event.target.name]: event.target.value });
   };
 
   const handleAdd = () => {
-    setEmploye([...employe, inputValues]);
-    setInputValues({ name: '',status:""});
-    setId(id+1)
+    setTodo([...todo, inputValues]);
+    // setInputValues({ name: "", status: "" });
+    setId(id + 1);
   };
-  const handleDelete = index =>{
+  const handleDelete = (index) => {
+    console.log("index", index);
+
+    const temp = todo.filter((e, ind) => ind !== index);
+    setTodo(temp);
+  };
+
+  const handleStatus = (index,task) => {
    
-   console.log('index',index)
-
-   const temp=employe.filter((e,ind)=>ind!==index)
-   setEmploye(temp)
-   
-    // setEmploye(oldValues => {
-    //   return oldValues.filter(employe => index !==index)
-      
-    // })
-    // alert("you clicked delete button");
-
-    
-
-
-  }
-
-   const handleStatus = index  => {
+        let temp = [...todo];
+        setTodo(temp);
+        task.status = !task.status;
+        console.log("DATA = ", todo);
      
-    if(employe[index].status){
-      console.log(employe[index].status=false) 
-    }
-    else{
-      console.log(employe[index].status=true)
-    }
-    
-  
 
-   }
+    // if(todo[index].status){
 
-   const handleCheck = index => {
-      
-   }
-
-
-
+    //   console.log(todo[index].status=false)
+    // }
+    // else{
+    //   console.log(todo[index].status=true)
+    // }
+  };
 
   return (
     <div>
-      <form>
-      
-      
+      <form className="todo">
         <label>
-        Name:
-          <input type="text" name="name" value={inputValues.name} onChange={handleChange} />
-        </label>
-
-        <label>
-        Status:
-          <input type="text" name="status" value={inputValues.status} onChange={handleChange} />
+          Name:
+          <input
+            type="text"
+            name="name"
+            value={inputValues.name}
+            onChange={handleChange}
+          />
         </label>
       </form>
-      <button onClick={handleAdd} style={{fontSize:"30px"}}>Add</button>
+      <button onClick={handleAdd} style={{ fontSize: "30px" }}>
+        Add
+      </button>
       <ul>
-        {employe.map((person, index) => (
-          <li key={index}>  Id : {index+1} , Name: {person.name},Status: {person.status} 
-          <button style={{}} onClick={() => handleDelete(index)}>Delete</button>
-          <button onClick={() => handleStatus(index)}>Statusbtn</button>
-          <label>
-            <input type="checkbox" name='checkbox' onChange={handleCheck}/>
-          </label>
-          </li>
-        ))}
+        {todo.map((task, index) => {
+          // debugger
+          return (
+            <li className={task.status == true ? "active" : null} key={index}>
+              {" "}
+              Id : {index + 1} , Name: {task.name},Status: {task.status}
+              <button onClick={() => handleDelete(index)}>Delete</button>
+              <button onClick={() => handleStatus(index,task)}>Statusbtn</button>
+              {task.status}
+              <label>
+                <input type="checkbox" name="checkbox" />
+              </label>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
