@@ -6,37 +6,40 @@ function Form() {
   const [todo, setTodo] = useState([]);
   const [id, setId] = useState(0);
 
+  // handle change
+
   const handleChange = (event) => {
-    setInputValues({ ...inputValues, [event.target.name]: event.target.value });
+    setInputValues({ status: false, name: event.target.value });
   };
+
+  //  handle Add
 
   const handleAdd = () => {
-    setTodo([...todo, inputValues]);
-    // setInputValues({ name: "", status: "" });
-    setId(id + 1);
+    if (inputValues.name === "") {
+      alert("Please Enter The Name");
+    } else {
+      setTodo([...todo, inputValues]);
+      setInputValues({ name: "", status: false });
+      setId(id + 1);
+    }
   };
+
+  //  handle Delete
+
   const handleDelete = (index) => {
-    console.log("index", index);
+    console.log("index", todo);
 
     const temp = todo.filter((e, ind) => ind !== index);
+    console.log("new list", temp);
     setTodo(temp);
   };
 
-  const handleStatus = (index,task) => {
-   
-        let temp = [...todo];
-        setTodo(temp);
-        task.status = !task.status;
-        console.log("DATA = ", todo);
-     
+  // handle Check
 
-    // if(todo[index].status){
-
-    //   console.log(todo[index].status=false)
-    // }
-    // else{
-    //   console.log(todo[index].status=true)
-    // }
+  const handleCheck = (index, task) => {
+    const temp = [...todo];
+    temp[index].status = !task.status;
+    setTodo(temp);
   };
 
   return (
@@ -52,21 +55,28 @@ function Form() {
           />
         </label>
       </form>
+
       <button onClick={handleAdd} style={{ fontSize: "30px" }}>
         Add
       </button>
+
       <ul>
+        {console.log("RENDER", todo)}
+
         {todo.map((task, index) => {
-          // debugger
           return (
-            <li className={task.status == true ? "active" : null} key={index}>
+            <li className={task.status === true ? "active" : null} key={index}>
               {" "}
-              Id : {index + 1} , Name: {task.name},Status: {task.status}
+              Id : {index + 1} , Name: {task.name}, Status:{" "}
+              {task.status.toString()}
               <button onClick={() => handleDelete(index)}>Delete</button>
-              <button onClick={() => handleStatus(index,task)}>Statusbtn</button>
-              {task.status}
               <label>
-                <input type="checkbox" name="checkbox" />
+                <input
+                  type="checkbox"
+                  name="checkbox"
+                  checked={task.status}
+                  onChange={() => handleCheck(index, task)}
+                />
               </label>
             </li>
           );
