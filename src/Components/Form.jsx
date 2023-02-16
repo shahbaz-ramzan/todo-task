@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import "./style.css";
 
 function Form() {
@@ -41,7 +41,27 @@ function Form() {
     temp[index].status = !task.status;
     setTodo(temp);
   };
+  
 
+
+
+
+useEffect(() => {
+  if(todo.length!==0){
+    localStorage.setItem('todo', JSON.stringify(todo));
+
+  }
+}, [todo]);
+
+useEffect(() => {
+  const todo=JSON.parse(localStorage.getItem('todo'));
+  if(todo){
+    setTodo(todo);
+    
+  }
+},[]);
+
+// console(setTodo);
   return (
     <div>
       <form className="todo">
@@ -50,13 +70,14 @@ function Form() {
           <input
             type="text"
             name="name"
+            placeholder="Enter Name"
             value={inputValues.name}
             onChange={handleChange}
           />
         </label>
       </form>
 
-      <button onClick={handleAdd} style={{ fontSize: "30px" }}>
+      <button onClick={handleAdd} style={{ fontSize: "30px" ,backgroundColor:"blue" ,border:"2px solid black"}}>
         Add
       </button>
 
@@ -69,7 +90,7 @@ function Form() {
               {" "}
               Id : {index + 1} , Name: {task.name}, Status:{" "}
               {task.status.toString()}
-              <button onClick={() => handleDelete(index)}>Delete</button>
+              <button onClick={() => handleDelete(index)} style={{backgroundColor:"red" ,border:"2px solid black"}}>Delete</button>
               <label>
                 <input
                   type="checkbox"
